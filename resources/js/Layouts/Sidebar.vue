@@ -28,7 +28,6 @@ const openReport = ref(false)
  * TODO: ต่อ backend จริงภายหลัง
  */
 const pendingCount = 0
-const notifyCount = 1204
 </script>
 
 <template>
@@ -69,15 +68,6 @@ const notifyCount = 1204
     </li>
 
     <!-- ================================================= -->
-    <!-- 🔍 Search -->
-    <!-- ================================================= -->
-    <li>
-      <Link href="/documents" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-800">
-        🔍 ค้นหา
-      </Link>
-    </li>
-
-    <!-- ================================================= -->
     <!-- 📌 Pending -->
     <!-- ================================================= -->
     <li>
@@ -87,15 +77,6 @@ const notifyCount = 1204
           ({{ pendingCount }})
         </span>
       </Link>
-    </li>
-
-    <!-- ================================================= -->
-    <!-- 📝 Orders (Director / Admin) -->
-    <!-- ================================================= -->
-    <li v-if="isDirector">
-      <span class="flex items-center gap-2 px-3 py-2 text-gray-400">
-        📝 คำสั่งเพิ่มเติม
-      </span>
     </li>
 
     <!-- ================================================= -->
@@ -115,38 +96,5 @@ const notifyCount = 1204
     🏢 หน่วยงาน
   </Link>
 </li>
-
-    <!-- ================================================= -->
-    <!-- 📊 Reports -->
-    <!-- ================================================= -->
-    <li>
-      <button @click="openReport = !openReport"
-        class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-gray-800">
-        <span>📊 รายงาน</span>
-        <span>{{ openReport ? '▾' : '▸' }}</span>
-      </button>
-
-      <ul v-if="openReport" class="ml-4 mt-1 space-y-1 text-gray-400">
-        <li>
-          <Link href="/reports/documents" class="block px-3 py-1 hover:text-white">
-            รายงานเอกสาร
-          </Link>
-        </li>
-      </ul>
-    </li>
-
-    <!-- ================================================= -->
-    <!-- 🔔 Notifications -->
-    <!-- ================================================= -->
-    <li>
-      <Link href="/notifications" class="flex items-center justify-between px-3 py-2 rounded hover:bg-gray-800">
-        <span>🔔 แจ้งเตือน</span>
-        <span class="text-red-500">
-          ({{ notifyCount }})
-        </span>
-      </Link>
-    </li>
-
-
   </aside>
 </template>

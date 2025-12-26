@@ -24,14 +24,14 @@ require __DIR__ . '/auth.php';
 
 /*
 |--------------------------------------------------------------------------
-| Protected Routes (login แล้ว)
+| Protected Routes (auth + active)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'active'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | 📄 Documents (Internal / Outgoing)
+    | 📄 Documents (Internal)
     |--------------------------------------------------------------------------
     */
     Route::get('/documents', fn () => redirect()->route('documents.index'));
@@ -40,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('documents.index');
 
     Route::get('/documents/create', [DocumentController::class, 'create'])
-    ->name('documents.create');
+        ->name('documents.create');
 
     Route::post('/documents', [DocumentController::class, 'store'])
         ->name('documents.store');
@@ -88,9 +88,10 @@ Route::middleware(['auth'])->group(function () {
         'distribute',
     ])->name('documents.distribute');
 
-    Route::post('/documents/{document}/cancel',
-    [DocumentWorkflowController::class, 'cancel']
-)->name('documents.cancel');
+    Route::post('/documents/{document}/cancel', [
+        DocumentWorkflowController::class,
+        'cancel',
+    ])->name('documents.cancel');
 
     /*
     |--------------------------------------------------------------------------
@@ -99,60 +100,60 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::middleware('role:clerk')->group(function () {
 
-        // หน้า index รับนอก
         Route::get('/documents/incoming', [
             ExternalDocumentController::class,
             'index',
         ])->name('documents.incoming.index');
 
-        // เตรียมข้อมูล (departments) สำหรับ modal / form
         Route::get('/documents/incoming/create', [
             ExternalDocumentController::class,
             'create',
         ])->name('documents.incoming.create');
 
-        // บันทึกรับเอกสารภายนอก
         Route::post('/documents/incoming', [
             ExternalDocumentController::class,
             'store',
         ])->name('documents.incoming.store');
-
     });
 
-            /*
-        |--------------------------------------------------------------------------
-        | 🏢 Department (master data สำหรับ incoming)
-        |--------------------------------------------------------------------------
-        */
-    Route::resource('departments', DepartmentController::class)
-    ->except(['show', 'create', 'edit']);
     /*
     |--------------------------------------------------------------------------
-    | 👤 Admin : User Management
+    | 🏢 Departments (master data)
     |--------------------------------------------------------------------------
     */
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('departments', DepartmentController::class)
+        ->except(['show', 'create', 'edit']);
 
-        Route::get('/users', [UserController::class, 'index'])
-            ->name('users.index');
+    /*
+    |--------------------------------------------------------------------------
+    | 👤 Admin : User Management (ADMIN เท่านั้น)
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('admin')
+        ->name('admin.')
+        ->middleware('admin')
+        ->group(function () {
 
-        Route::patch('/users/{user}/toggle-status', [
-            UserController::class,
-            'toggleStatus',
-        ])->name('users.toggle-status');
+            Route::get('/users', [UserController::class, 'index'])
+                ->name('users.index');
 
-        Route::get('/users/create', [UserController::class, 'create'])
-            ->name('users.create');
+            Route::patch('/users/{user}/toggle-status', [
+                UserController::class,
+                'toggleStatus',
+            ])->name('users.toggle-status');
 
-        Route::post('/users', [UserController::class, 'store'])
-            ->name('users.store');
+            Route::get('/users/create', [UserController::class, 'create'])
+                ->name('users.create');
 
-        Route::get('/users/{user}/edit', [UserController::class, 'edit'])
-            ->name('users.edit');
+            Route::post('/users', [UserController::class, 'store'])
+                ->name('users.store');
 
-        Route::put('/users/{user}', [UserController::class, 'update'])
-            ->name('users.update');
-    });
+            Route::get('/users/{user}/edit', [UserController::class, 'edit'])
+                ->name('users.edit');
+
+            Route::put('/users/{user}', [UserController::class, 'update'])
+                ->name('users.update');
+        });
 
     /*
     |--------------------------------------------------------------------------
@@ -173,9 +174,12 @@ Route::middleware(['auth'])->group(function () {
         auth()->user()->unreadNotifications->markAsRead();
         return back();
     })->name('notifications.readAll');
-});
-Route::middleware(['auth'])->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | 📊 Reports
+    |--------------------------------------------------------------------------
+    */
     Route::get('/reports/documents', [ReportController::class, 'documents'])
         ->name('reports.documents');
 });
-
