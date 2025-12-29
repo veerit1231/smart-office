@@ -10,6 +10,7 @@ use App\Http\Controllers\ExternalDocumentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Admin\BackupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -153,6 +154,17 @@ Route::middleware(['auth', 'active'])->group(function () {
 
             Route::put('/users/{user}', [UserController::class, 'update'])
                 ->name('users.update');
+                // -------------------------
+        // 🗄️ Backup System
+        // -------------------------
+        Route::get('/backup', [BackupController::class, 'index'])
+            ->name('backup.index');
+
+        Route::post('/backup/run', [BackupController::class, 'run'])
+            ->name('backup.run');
+
+        Route::get('/backup/download', [BackupController::class, 'download'])
+            ->name('backup.download');
         });
 
     /*

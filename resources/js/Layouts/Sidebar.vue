@@ -95,6 +95,14 @@ const pendingCount = 0
   <Link href="/departments" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-800">
     🏢 หน่วยงาน
   </Link>
+  <li v-if="user.role === 'admin'">
+  <Link
+    :href="route('admin.backup.index')"
+    class="sidebar-link"
+  >
+    🗄️ Backup System
+  </Link>
+</li>
 </li>
   </aside>
 </template>
