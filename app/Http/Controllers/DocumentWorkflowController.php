@@ -96,19 +96,20 @@ class DocumentWorkflowController extends Controller
         // ✅ NEW: generate doc_no per department
 if (is_null($document->doc_no)) {
 
-    $departmentId = $document->department_id;
+    $counter = DocumentCounter::lockForUpdate()->first();
 
-    $counter = DocumentCounter::firstOrCreate(
-        ['department_id' => $departmentId],
-        ['last_number' => 0]
-    );
+    if (! $counter) {
+        $counter = DocumentCounter::create([
+            'last_number' => 0,
+        ]);
+    }
 
     $counter->increment('last_number');
 
-    $document->update([
-        'doc_no' => str_pad($counter->last_number, 3, '0', STR_PAD_LEFT),
-    ]);
+    $document->doc_no = str_pad($counter->last_number, 3, '0', STR_PAD_LEFT);
+    $document->save();
 }
+
         // ✅ ===== ADD END =====
 
         $this->transition(

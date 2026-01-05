@@ -1,6 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { useForm, router } from '@inertiajs/vue3'
+import dayjs from 'dayjs'
 
 const props = defineProps({
   departments: {
@@ -12,6 +13,7 @@ const props = defineProps({
 const form = useForm({
   title: '',
   department_id: '',
+  document_date: new Date().toISOString().slice(0, 10), // YYYY-MM-DD
 })
 
 const submit = () => {
@@ -21,7 +23,7 @@ const submit = () => {
 
 <template>
   <AppLayout title="สร้างเอกสารใหม่">
-    <!-- ===== Top Header (Logo / Banner) ===== -->
+    <!-- ===== Top Header ===== -->
     <div class="bg-white border-b">
       <div class="max-w-7xl mx-auto px-6 py-4 flex items-center gap-3">
       </div>
@@ -86,6 +88,24 @@ const submit = () => {
               </select>
               <p v-if="form.errors.department_id" class="text-red-600 text-sm mt-1">
                 {{ form.errors.department_id }}
+              </p>
+            </div>
+
+            <!-- วันที่บันทึก -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                วันที่บันทึกหนังสือ
+              </label>
+              <input
+  type="date"
+  v-model="form.document_date"
+  min="2000-01-01"
+  max="2100-12-31"
+/>
+              <!-- แสดงวันที่ (คริสต์ศักราช) -->
+              <p v-if="form.document_date" class="text-sm text-gray-500 mt-1">
+                วันที่เลือก:
+                {{ dayjs(form.document_date).format('DD/MM/YYYY') }}
               </p>
             </div>
 

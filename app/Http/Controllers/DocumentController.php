@@ -142,41 +142,45 @@ class DocumentController extends Controller
      * ➕ หน้า Create เอกสาร
      */
     public function create()
-    {
-        return Inertia::render('Documents/Create', [
-            'departments' => Department::orderBy('name')->get(['id', 'name']),
-        ]);
-    }
+{
+    return Inertia::render('Documents/Create', [
+        'departments' => Department::orderBy('name')->get(['id', 'name']),
+        'today' => now()->toDateString(), // 👈 เพิ่ม
+    ]);
+}
 
     /**
      * 💾 สร้างเอกสาร (Draft)
      */
     public function store(Request $request)
-    {
-        $data = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'department_id' => ['required', 'exists:departments,id'],
-        ]);
+{
+    $data = $request->validate([
+        'title' => ['required', 'string', 'max:255'],
+        'department_id' => ['required', 'exists:departments,id'],
+        'document_date' => ['nullable', 'date'], // 👈 เพิ่ม
+    ]);
 
-        $document = Document::create([
-            'title' => $data['title'],
-            'department_id' => $data['department_id'],
-            'created_by' => Auth::id(),
-            'status' => 'draft',
-        ]);
+    $document = Document::create([
+        'title'         => $data['title'],
+        'department_id' => $data['department_id'],
+        'document_date' => $data['document_date'] ?? now()->toDateString(), // 👈 เพิ่ม
+        'created_by'    => Auth::id(),
+        'status'        => 'draft',
+    ]);
 
-        $document->logs()->create([
-            'user_id'     => Auth::id(),
-            'action'      => 'created',
-            'from_status' => null,
-            'to_status'   => 'draft',
-            'remark'      => 'สร้างเอกสาร',
-        ]);
+    $document->logs()->create([
+        'user_id'     => Auth::id(),
+        'action'      => 'created',
+        'from_status' => null,
+        'to_status'   => 'draft',
+        'remark'      => 'สร้างเอกสาร',
+    ]);
 
-        return redirect()
-            ->route('documents.index')
-            ->with('success', 'สร้างเอกสารเรียบร้อยแล้ว');
-    }
+    return redirect()
+        ->route('documents.index')
+        ->with('success', 'สร้างเอกสารเรียบร้อยแล้ว');
+}
+
 
     /**
      * 👁 แสดงเอกสาร
@@ -197,4 +201,9 @@ class DocumentController extends Controller
             ],
         ]);
     }
+    
+    protected $casts = [
+    'document_date' => 'date',
+];
+
 }

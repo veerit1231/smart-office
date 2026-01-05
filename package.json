@@ -18,6 +18,9 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@tailwindcss/line-clamp": "^0.4.4",
+        "dayjs": "^1.11.19",
+        "flatpickr": "^4.6.13",
         "lodash": "^4.17.21"
     }
 }

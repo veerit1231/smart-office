@@ -53,6 +53,7 @@ class Document extends Model
         'department_id',
         'file_path',
         'meta',
+        'document_date' ,
     ];
 
     /*

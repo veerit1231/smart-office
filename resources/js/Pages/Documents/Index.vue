@@ -11,6 +11,12 @@ import debounce from 'lodash/debounce'
 import { Link } from '@inertiajs/vue3'
 import { reactive } from 'vue'
 
+import dayjs from 'dayjs'
+import 'dayjs/locale/th'
+
+dayjs.locale('th')
+
+
 defineOptions({ layout: AppLayout })
 
 /* =======================
@@ -166,11 +172,7 @@ const closeDistribute = () => {
 
         <div>
           <label class="text-xs text-gray-500 mb-1 block">ค้นหา</label>
-          <input
-  v-model="filterForm.search"
-  placeholder="เลขเอกสาร / เรื่อง"
-  class="input"
-/>
+          <input v-model="filterForm.search" placeholder="เลขเอกสาร / เรื่อง" class="input" />
         </div>
 
         <div>
@@ -186,21 +188,19 @@ const closeDistribute = () => {
         <div>
           <label class="text-xs text-gray-500 mb-1 block">หน่วยงาน</label>
           <select v-model="filterForm.department" class="input">
-  <option value="">ทุกหน่วยงาน</option>
-  <option v-for="d in departments" :key="d.id" :value="d.id">
-    {{ d.name }}
-  </option>
-</select>
+            <option value="">ทุกหน่วยงาน</option>
+            <option v-for="d in departments" :key="d.id" :value="d.id">
+              {{ d.name }}
+            </option>
+          </select>
         </div>
 
         <div class="flex justify-end">
-          <button
-  v-if="filterForm.search || filterForm.status || filterForm.department"
-  class="text-sm text-gray-500 hover:text-red-600"
-  @click="filterForm = { search: '', status: '', department: '', mine: false }"
->
-  ล้างตัวกรอง
-</button>
+          <button v-if="filterForm.search || filterForm.status || filterForm.department"
+            class="text-sm text-gray-500 hover:text-red-600"
+            @click="filterForm = { search: '', status: '', department: '', mine: false }">
+            ล้างตัวกรอง
+          </button>
         </div>
 
       </div>
@@ -229,7 +229,7 @@ const closeDistribute = () => {
           </td>
 
           <td class="px-4 py-3">
-            <div class="font-medium text-gray-800">
+            <div class="font-medium text-gray-800 max-w-xl line-clamp-2" :title="doc.title">
               {{ doc.title }}
             </div>
           </td>
@@ -245,19 +245,28 @@ const closeDistribute = () => {
             </span>
           </td>
           <td class="px-3 py-2 text-sm text-gray-600">
-            {{ new Date(doc.created_at).toLocaleDateString('th-TH') }}
+            {{ doc.document_date
+              ? dayjs(doc.document_date).format('DD/MM/YYYY')
+            : '-' }}
           </td>
           <td class="px-4 py-3">
             <StatusBadge :status="doc.status" />
           </td>
 
-          <td class="px-4 py-3 text-right space-x-2">
-            <button class="text-indigo-600 hover:underline">
-              <Link :href="route('documents.show', doc.id)" class="text-blue-600 hover:underline">
-                เปิด
-              </Link>
-            </button>
-          </td>
+          <td class="px-4 py-3 text-right">
+  <Link
+    :href="route('documents.show', doc.id)"
+    class="inline-flex items-center gap-1 px-3 py-1.5
+           rounded-md text-sm font-medium
+           bg-indigo-600 text-white
+           hover:bg-indigo-700
+           focus:outline-none focus:ring-2 focus:ring-indigo-400
+           transition"
+  >
+    🔍 เปิด
+  </Link>
+</td>
+
         </tr>
       </tbody>
     </table>
