@@ -52,11 +52,11 @@ const pendingCount = 0
     <!-- ================================================= -->
     <!-- 📥 Incoming (Clerk / Admin) -->
     <!-- ================================================= -->
-    <li v-if="isClerk">
+    <!-- <li v-if="isClerk">
       <Link href="/documents/incoming/create" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-800">
         📄 บันทึกเอกสารรับนอก
       </Link>
-    </li>
+    </li> -->
 
     <!-- ================================================= -->
     <!-- 📄 Internal (User / Admin) -->

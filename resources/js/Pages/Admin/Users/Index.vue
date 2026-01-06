@@ -96,12 +96,6 @@ defineProps({
                 แก้ไข
               </Link>
 
-              <Link
-                :href="`/admin/users/${user.id}`"
-                class="text-gray-600 hover:underline"
-              >
-                ดู
-              </Link>
             </td>
           </tr>
 
