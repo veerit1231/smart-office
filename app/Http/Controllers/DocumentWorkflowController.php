@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\DB;
 use App\Notifications\DocumentApprovedNotification;
 use App\Notifications\DocumentDistributedNotification;
 use App\Models\DocumentCounter;
-use App\Models\DocumentTimeline;
 
 class DocumentWorkflowController extends Controller
 {
@@ -292,29 +291,35 @@ if (is_null($document->doc_no)) {
             'remark'      => $remark,
         ]);
     }
-    public function cancel(Request $request, Document $document)
+public function cancel(Request $request, Document $document)
 {
     if (! $document->canBeCancelled()) {
         abort(403, 'Document cannot be cancelled');
     }
 
     $request->validate([
-        'remark' => 'required|string',
+        'remark' => 'required|string|max:255',
     ]);
+
+    $fromStatus = $document->status;
 
     $document->update([
         'status' => 'cancelled',
+        'current_step' => null,
     ]);
 
-    DocumentTimeline::create([
+    DocumentLog::create([
         'document_id' => $document->id,
-        'action' => 'cancel',
-        'remark' => $request->remark,
-        'actor_id' => auth()->id(),
+        'user_id'     => auth()->id(),
+        'action'      => 'cancel',
+        'from_status' => $fromStatus,
+        'to_status'   => 'cancelled',
+        'remark'      => $request->remark,
     ]);
 
-    return back();
+    return back()->with('success', 'ยกเลิกเอกสารเรียบร้อยแล้ว');
 }
+
 }
 
 
