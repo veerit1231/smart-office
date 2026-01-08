@@ -261,40 +261,26 @@ const closeDistribute = () => {
           <td class="px-3 py-2 text-sm text-gray-600">
             {{ doc.document_date
               ? dayjs(doc.document_date).format('DD/MM/YYYY')
-<<<<<<< HEAD
             : '-' }}
-=======
-              : '-' }}
->>>>>>> a9d5982 (update smart office)
           </td>
           <td class="px-4 py-3">
             <StatusBadge :status="doc.status" />
           </td>
 
           <td class="px-4 py-3 text-right">
-<<<<<<< HEAD
   <Link
     :href="route('documents.show', doc.id)"
     class="inline-flex items-center gap-1 px-3 py-1.5
-=======
-            <Link :href="route('documents.show', doc.id)" class="inline-flex items-center gap-1 px-3 py-1.5
->>>>>>> a9d5982 (update smart office)
            rounded-md text-sm font-medium
            bg-indigo-600 text-white
            hover:bg-indigo-700
            focus:outline-none focus:ring-2 focus:ring-indigo-400
-<<<<<<< HEAD
            transition"
   >
     🔍 เปิด
   </Link>
 </td>
-=======
-           transition">
-              🔍 เปิด
-            </Link>
-          </td>
->>>>>>> a9d5982 (update smart office)
+
 
         </tr>
       </tbody>
