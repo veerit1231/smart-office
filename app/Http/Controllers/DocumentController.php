@@ -24,7 +24,10 @@ class DocumentController extends Controller
         |--------------------------------------------------------------------------
         */
         $query = Document::query()
-            ->with('department');
+    ->with([
+        'department',
+        'creator:id,name', // 👈 เพิ่ม
+    ]);
 
         /*
         |--------------------------------------------------------------------------
@@ -77,7 +80,10 @@ class DocumentController extends Controller
         if ($request->filled('department')) {
             $query->where('department_id', $request->department);
         }
-
+        // 👤 Filter by creator
+if ($request->filled('creator')) {
+    $query->where('created_by', $request->creator);
+}
         /*
         |--------------------------------------------------------------------------
         | 5️⃣ Pagination
@@ -134,6 +140,7 @@ class DocumentController extends Controller
                 'status',
                 'department',
                 'mine',
+                'creator',
             ]),
         ]);
     }
@@ -197,7 +204,7 @@ class DocumentController extends Controller
             'document'  => $document,
             'canCancel' => $document->canBeCancelled(),
             'auth' => [
-                'user' => auth()->user(),
+            'user' => auth()->user(),
             ],
         ]);
     }

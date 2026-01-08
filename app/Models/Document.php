@@ -178,4 +178,5 @@ class Document extends Model
     {
         return self::STATUS_LABELS[$this->status] ?? $this->status;
     }
+    
 }

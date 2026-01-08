@@ -212,6 +212,7 @@ const closeDistribute = () => {
           <th class="px-4 py-3 text-left w-28">เลขที่</th>
           <th class="px-4 py-3 text-left">เรื่อง</th>
           <th class="px-4 py-3 text-left w-48">หน่วยงาน</th>
+          <th class="px-4 py-3 text-left w-48">ผู้สร้าง</th>
           <th class="px-3 py-2 text-left w-48">ประเภท</th>
           <th class="px-3 py-2 text-left w-40">วันที่สร้าง</th>
           <th class="px-4 py-3 text-left w-40">สถานะ</th>
@@ -237,6 +238,19 @@ const closeDistribute = () => {
           <td class="px-4 py-3 text-gray-600">
             {{ doc.department?.name || '-' }}
           </td>
+          <td class="px-4 py-3">
+  <Link
+    v-if="doc.creator"
+    :href="route('documents.index', { creator: doc.creator.id })"
+    class="text-blue-600 hover:underline"
+  >
+    {{ doc.creator.name }}
+  </Link>
+
+  <span v-else class="text-gray-400">
+    -
+  </span>
+</td>
           <td class="px-3 py-2">
             <span class="px-2 py-1 text-xs rounded-full" :class="doc.type === 'incoming'
               ? 'bg-purple-100 text-purple-700'
@@ -247,25 +261,40 @@ const closeDistribute = () => {
           <td class="px-3 py-2 text-sm text-gray-600">
             {{ doc.document_date
               ? dayjs(doc.document_date).format('DD/MM/YYYY')
+<<<<<<< HEAD
             : '-' }}
+=======
+              : '-' }}
+>>>>>>> a9d5982 (update smart office)
           </td>
           <td class="px-4 py-3">
             <StatusBadge :status="doc.status" />
           </td>
 
           <td class="px-4 py-3 text-right">
+<<<<<<< HEAD
   <Link
     :href="route('documents.show', doc.id)"
     class="inline-flex items-center gap-1 px-3 py-1.5
+=======
+            <Link :href="route('documents.show', doc.id)" class="inline-flex items-center gap-1 px-3 py-1.5
+>>>>>>> a9d5982 (update smart office)
            rounded-md text-sm font-medium
            bg-indigo-600 text-white
            hover:bg-indigo-700
            focus:outline-none focus:ring-2 focus:ring-indigo-400
+<<<<<<< HEAD
            transition"
   >
     🔍 เปิด
   </Link>
 </td>
+=======
+           transition">
+              🔍 เปิด
+            </Link>
+          </td>
+>>>>>>> a9d5982 (update smart office)
 
         </tr>
       </tbody>
